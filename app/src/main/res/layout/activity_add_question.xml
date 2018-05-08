@@ -48,6 +48,7 @@
         android:hint="Year"/>
 
     <TextView
+        android:id="@+id/que"
         android:text="Add Picture"
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
@@ -73,6 +74,13 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="Submit"/>
+    <ImageView
+        android:id="@+id/iv_qp"
+        android:layout_below="@+id/que"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_add_black_24dp"
+        />
 
 
 </RelativeLayout>

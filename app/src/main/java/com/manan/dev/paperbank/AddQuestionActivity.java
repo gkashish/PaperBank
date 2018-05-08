@@ -1,12 +1,19 @@
 package com.manan.dev.paperbank;
 
 
+import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
+import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
@@ -15,9 +22,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +38,15 @@ import java.util.List;
 
 public class AddQuestionActivity extends AppCompatActivity {
 
-    private Uri outputFileUri;
+    private Uri mOutputFileUri;
+    private File outputFile;
+    private ImageView iv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_question);
+        iv=findViewById(R.id.iv_qp);
         FloatingActionButton addImage=findViewById(R.id.floatingActionButton);
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,14 +56,14 @@ public class AddQuestionActivity extends AppCompatActivity {
         });
     }
 
-    private void openImageIntent() {
 
-        // Determine Uri of camera image to save.
-        final File root = new File(Environment.getExternalStorageDirectory() + File.separator + "MyDir" + File.separator);
-        root.mkdirs();
-        final String fname = "img_"+ System.currentTimeMillis() + ".jpg";
-        final File sdImageMainDirectory = new File(root, fname);
-        outputFileUri = Uri.fromFile(sdImageMainDirectory);
+    private void openImageIntent() {
+        try {
+            outputFile = File.createTempFile("tmp", ".jpg", getCacheDir());
+        } catch (IOException pE) {
+            pE.printStackTrace();
+        }
+        mOutputFileUri = Uri.fromFile(outputFile);
 
         // Camera.
         final List<Intent> cameraIntents = new ArrayList<Intent>();
@@ -58,16 +73,15 @@ public class AddQuestionActivity extends AppCompatActivity {
         for(ResolveInfo res : listCam) {
             final String packageName = res.activityInfo.packageName;
             final Intent intent = new Intent(captureIntent);
-            intent.setComponent(new ComponentName(packageName, res.activityInfo.name));
+            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
             intent.setPackage(packageName);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             cameraIntents.add(intent);
         }
 
         // Filesystem.
         final Intent galleryIntent = new Intent();
         galleryIntent.setType("image/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setAction(Intent.ACTION_PICK);
 
         // Chooser of filesystem options.
         final Intent chooserIntent = Intent.createChooser(galleryIntent, "Select Source");
@@ -75,38 +89,52 @@ public class AddQuestionActivity extends AppCompatActivity {
         // Add the camera options.
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
 
-        startActivityForResult(chooserIntent, 100);
+        startActivityForResult(chooserIntent, 42);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == 100) {
-                final boolean isCamera;
-                if (data == null) {
-                    isCamera = true;
+            if (requestCode == 42) {
+                Bitmap bmp = null;
+                if (data.hasExtra("data")) {
+                    Bundle extras = data.getExtras();
+                    bmp = (Bitmap) extras.get("data");
                 } else {
-                    final String action = data.getAction();
-                    if (action == null) {
-                        isCamera = false;
-                    } else {
-                        isCamera = action.equals(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    AssetFileDescriptor fd = null;
+                    try {
+                        fd = getContentResolver().openAssetFileDescriptor(data.getData(), "r");
+                    } catch (FileNotFoundException pE) {
+                        pE.printStackTrace();
                     }
+                    bmp = BitmapFactory.decodeFileDescriptor(fd.getFileDescriptor());
                 }
+                try {
+                    FileOutputStream out = new FileOutputStream(new File(mOutputFileUri.getPath()));
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    out.flush();
+                    out.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.d("hey",mOutputFileUri.toString());
 
-                Uri selectedImageUri;
-                if (isCamera) {
-                    selectedImageUri = outputFileUri;
-                } else {
-                    selectedImageUri = data == null ? null : data.getData();
+                InputStream is = null;
+                try {
+                    is = getContentResolver().openInputStream(mOutputFileUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                if(selectedImageUri!=null){
-
-                    Toast.makeText(this,selectedImageUri.toString(),Toast.LENGTH_SHORT).show();
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                else {
-                    Log.d("hey","problem aa gayi");
-                }
+                iv.setImageBitmap(bitmap);
+                //loadFacePicture(mOutputFileUri);
             }
         }
     }
