@@ -1,86 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".AddQuestionActivity">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/et_college"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:hint="Institute/Program Name"/>
-
-    <EditText
-        android:id="@+id/et_batch"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/et_college"
-        android:layout_marginTop="10dp"
-        android:hint="Year/Branch Name"/>
-    <EditText
-        android:id="@+id/et_subject"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/et_batch"
-        android:layout_marginTop="10dp"
-        android:hint="Subject"/>
-    <EditText
-        android:id="@+id/et_exam_type"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/et_subject"
-        android:layout_marginTop="10dp"
-        android:hint="Exam Type"/>
-    <EditText
-        android:id="@+id/et_year"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/et_exam_type"
-        android:layout_marginTop="10dp"
-        android:hint="Year"/>
-
-    <TextView
-        android:id="@+id/que"
-        android:text="Add Picture"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/et_year"
-        android:layout_alignLeft="@+id/et_year"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/et_year"
-        android:layout_alignRight="@+id/et_year"
-        android:src="@drawable/ic_add_black_24dp" />
-
-    <Button
-        android:id="@+id/submit_button"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Submit"/>
-    <ImageView
-        android:id="@+id/iv_qp"
-        android:layout_below="@+id/que"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_add_black_24dp"
-        />
+        tools:context=".AddQuestionActivity">
 
+        <EditText
+            android:id="@+id/et_college"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="30dp"
+            android:hint="Institute/Program Name" />
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/et_batch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_college"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="10dp"
+            android:hint="Year/Branch Name" />
+
+        <EditText
+            android:id="@+id/et_subject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_batch"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="10dp"
+            android:hint="Subject" />
+
+        <EditText
+            android:id="@+id/et_exam_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_subject"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="10dp"
+            android:hint="Exam Type" />
+
+        <EditText
+            android:id="@+id/et_year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_exam_type"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="10dp"
+            android:hint="Year" />
+
+        <TextView
+            android:id="@+id/que"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_year"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:text="Add Pictures:" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/et_year"
+            android:layout_below="@+id/et_year"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_add_black_24dp" />
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/grid_qp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="Submit" />
+
+        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/grid_qp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="100dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/floatingActionButton"
+            android:stretchMode="columnWidth"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            />
+        <ImageView
+            android:id="@+id/temp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/que"/>
+
+    </RelativeLayout>
+</ScrollView>
